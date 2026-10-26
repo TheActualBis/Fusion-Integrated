@@ -450,7 +450,7 @@ def withdraw_request(*, request_id: int, employee_id: int) -> LeaveRequest:
 def submit_related_request(*, parent_id: int, employee_id: int, kind: str, actor_id: int,
                           start: date, end: date, reason: str, substitute_id: int | None = None,
                           actual_return_date: date | None = None, document_url: str = "") -> LeaveRequest:
-    parent = LeaveRequest.objects.select_for_update().select_related("leave_type", "parent_request").filter(
+    parent = LeaveRequest.objects.select_for_update().select_related("leave_type").filter(
         pk=parent_id, employee_id=employee_id, status__in=("approved", "extended"),
     ).first()
     if not parent:
@@ -489,7 +489,7 @@ def submit_related_request(*, parent_id: int, employee_id: int, kind: str, actor
             raise LeaveError("The actual return date cannot be in the future.")
         root = parent
         while root.request_kind == "extension" and root.parent_request_id:
-            root = LeaveRequest.objects.select_for_update().select_related("leave_type", "parent_request").get(
+            root = LeaveRequest.objects.select_for_update().select_related("leave_type").get(
                 pk=root.parent_request_id,
             )
         if actual_return_date < root.start_date:

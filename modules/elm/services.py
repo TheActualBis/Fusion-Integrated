@@ -9,7 +9,7 @@ from modules.elm.domain import (
     half_days_overlap, leave_days, split_days_by_year, validate_balance, validate_rh_date,
     validate_scl, year_end_lapse)
 from modules.elm.models import (
-    LeaveApplication, LeaveBalance, LeaveTransaction, RestrictedHoliday, 
+    LeaveApplication, LeaveBalance, LeaveTransaction, LeaveCalendar, 
     LeaveApprovalTask, LeaveAuthority, LeaveWorkflowConfig, ANNUAL_ENTITLEMENT)
 
 def _role_key(value: str) -> str:

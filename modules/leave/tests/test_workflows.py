@@ -22,7 +22,10 @@ pytestmark = pytest.mark.django_db
 
 
 def _request(*, category="CL", status="pending", request_kind="new", **values):
-    leave_type = LeaveType.objects.create(code=category, name=category, annual_entitlement=8)
+    leave_type, _ = LeaveType.objects.get_or_create(
+        code=category,
+        defaults={"name": category, "annual_entitlement": 8},
+    )
     fields = {
         "employee_id": 10, "leave_type": leave_type,
         "start_date": date(2026, 11, 2), "end_date": date(2026, 11, 3),
@@ -92,7 +95,9 @@ def test_resumption_uses_the_effective_period_after_an_approved_extension():
 
 def test_on_time_resumption_after_extension_does_not_charge_leave_twice():
     today = timezone.localdate()
-    leave_type = LeaveType.objects.create(code="EL", name="Earned Leave", annual_entitlement=30)
+    leave_type, _ = LeaveType.objects.get_or_create(
+        code="EL", defaults={"name": "Earned Leave", "annual_entitlement": 30}
+    )
     root = LeaveRequest.objects.create(
         employee_id=10, leave_type=leave_type, start_date=today - timedelta(days=10),
         end_date=today - timedelta(days=6), days=5, reason="Approved leave",
@@ -161,7 +166,9 @@ def test_year_end_processing_cannot_lapse_the_current_year_early():
 
 def test_year_end_retry_only_processes_unfinished_accounts():
     year = timezone.localdate().year - 1
-    leave_type = LeaveType.objects.create(code="EL", name="Earned Leave")
+    leave_type, _ = LeaveType.objects.get_or_create(
+        code="EL", defaults={"name": "Earned Leave"}
+    )
     first = services.LeaveBalance.objects.create(
         employee_id=21, leave_type=leave_type, year=year, opening=5,
     )
@@ -171,7 +178,7 @@ def test_year_end_retry_only_processes_unfinished_accounts():
     original = services._process_year_end_balance
 
     def fail_second(balance, target_year, actor_id):
-        if balance.employee_id == 22 and not LeaveYearEndRun.objects.get(year=year).processed_accounts:
+        if balance.employee_id == 22:
             raise services.LeaveError("temporary account failure")
         return original(balance, target_year, actor_id)
 
