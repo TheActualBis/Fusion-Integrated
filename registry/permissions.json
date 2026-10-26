@@ -1,0 +1,473 @@
+{
+  "modules": {
+    "directory": {
+      "grants": {
+        "Dean Academic": [
+          "directory.user.search"
+        ],
+        "acadadmin": [
+          "directory.user.search"
+        ],
+        "placement_chairman": [
+          "directory.user.search"
+        ],
+        "placement_coordinator": [
+          "directory.user.search"
+        ],
+        "placement_officer": [
+          "directory.user.search"
+        ]
+      },
+      "module_grants": [
+        "Dean Academic",
+        "acadadmin",
+        "placement_chairman",
+        "placement_coordinator",
+        "placement_officer"
+      ],
+      "permissions": [
+        {
+          "code": "directory.user.search",
+          "label": "Search the institute directory"
+        }
+      ],
+      "scope_permissions": [],
+      "system_permissions": []
+    },
+    "elm": {
+      "grants": {
+        "Dean Academic": [
+          "elm.leave.apply",
+          "elm.leave.approve",
+          "elm.leave.view"
+        ],
+        "acadadmin": [
+          "elm.leave.apply",
+          "elm.leave.approve",
+          "elm.leave.view"
+        ]
+      },
+      "module_grants": [
+        "Dean Academic",
+        "acadadmin"
+      ],
+      "permissions": [
+        {
+          "code": "elm.leave.apply",
+          "label": "Apply for leave"
+        },
+        {
+          "code": "elm.leave.view",
+          "label": "View own leave applications and balances"
+        },
+        {
+          "code": "elm.leave.approve",
+          "label": "Approve leave applications"
+        }
+      ],
+      "scope_permissions": [],
+      "system_permissions": []
+    },
+    "leave": {
+      "grants": {
+        "Dean": [
+          "leave.request.approve",
+          "leave.request.view"
+        ],
+        "Deputy Registrar (Estt.)": [
+          "leave.request.approve",
+          "leave.request.view"
+        ],
+        "Director": [
+          "leave.request.approve",
+          "leave.request.view"
+        ],
+        "Leave Administrator": [
+          "leave.balance.update",
+          "leave.configuration.manage",
+          "leave.record.offline",
+          "leave.request.view",
+          "leave.type.manage"
+        ],
+        "Registrar": [
+          "leave.request.approve",
+          "leave.request.view"
+        ],
+        "Unit Head": [
+          "leave.request.approve",
+          "leave.request.create",
+          "leave.request.delete",
+          "leave.request.view",
+          "leave.request.view_self"
+        ],
+        "faculty": [
+          "leave.request.create",
+          "leave.request.delete",
+          "leave.request.substitute",
+          "leave.request.view_self"
+        ],
+        "hr_officer": [
+          "leave.balance.update",
+          "leave.configuration.manage",
+          "leave.record.offline",
+          "leave.request.approve",
+          "leave.request.create",
+          "leave.request.delete",
+          "leave.request.view",
+          "leave.request.view_self",
+          "leave.type.manage"
+        ],
+        "staff": [
+          "leave.request.create",
+          "leave.request.delete",
+          "leave.request.substitute",
+          "leave.request.view_self"
+        ]
+      },
+      "module_grants": [
+        "Dean",
+        "Deputy Registrar (Estt.)",
+        "Director",
+        "Leave Administrator",
+        "Registrar",
+        "Unit Head",
+        "faculty",
+        "hr_officer",
+        "staff"
+      ],
+      "nav": {
+        "base_path": "/leave",
+        "icon": "CalendarCheck",
+        "items": [
+          {
+            "code": "leave.mine",
+            "icon": "CalendarCheck",
+            "label": "My Leave",
+            "required_permission": "leave.request.view_self",
+            "sort_order": 10,
+            "to": "/leave/mine"
+          },
+          {
+            "code": "leave.tasks",
+            "icon": "ClipboardText",
+            "label": "My Leave Tasks",
+            "required_permission": "leave.request.substitute",
+            "sort_order": 15,
+            "to": "/leave/tasks"
+          },
+          {
+            "code": "leave.requests",
+            "icon": "ClipboardText",
+            "label": "Leave Requests",
+            "required_permission": "leave.request.view",
+            "sort_order": 20,
+            "to": "/leave/requests"
+          },
+          {
+            "code": "leave.settings",
+            "icon": "Sliders",
+            "label": "Leave Settings",
+            "required_permission": "leave.type.manage",
+            "sort_order": 30,
+            "to": "/leave/settings"
+          }
+        ],
+        "label": "Employee Leave",
+        "nav_section": "People",
+        "sort_order": 20,
+        "status": "active"
+      },
+      "permissions": [
+        {
+          "code": "leave.request.view_self",
+          "label": "View own leave requests and balance"
+        },
+        {
+          "code": "leave.request.create",
+          "label": "Apply for leave"
+        },
+        {
+          "code": "leave.request.delete",
+          "label": "Cancel own pending request"
+        },
+        {
+          "code": "leave.request.substitute",
+          "label": "Respond to a responsibility coverage request"
+        },
+        {
+          "code": "leave.request.view",
+          "label": "View leave requests, within scope"
+        },
+        {
+          "code": "leave.request.approve",
+          "label": "Approve or reject a leave request"
+        },
+        {
+          "code": "leave.balance.update",
+          "label": "Adjust a leave balance"
+        },
+        {
+          "code": "leave.type.manage",
+          "label": "Configure leave types and entitlement rules"
+        },
+        {
+          "code": "leave.record.offline",
+          "label": "Record leave already sanctioned offline"
+        },
+        {
+          "code": "leave.configuration.manage",
+          "label": "Maintain leave hierarchy, calendar, and SLA configuration"
+        }
+      ],
+      "scope_permissions": [],
+      "system_permissions": []
+    },
+    "placement_cell": {
+      "grants": {
+        "Dean Academic": [
+          "placement_cell.academic_directory.view",
+          "placement_cell.announcement.publish",
+          "placement_cell.application.view",
+          "placement_cell.job_posting.view",
+          "placement_cell.report.view"
+        ],
+        "placement_chairman": [
+          "placement_cell.academic_directory.view",
+          "placement_cell.announcement.publish",
+          "placement_cell.application.view",
+          "placement_cell.job_posting.view",
+          "placement_cell.report.view"
+        ],
+        "placement_coordinator": [
+          "placement_cell.academic_directory.view",
+          "placement_cell.application.review",
+          "placement_cell.application.view",
+          "placement_cell.job_posting.view",
+          "placement_cell.report.view"
+        ],
+        "placement_officer": [
+          "placement_cell.academic_directory.view",
+          "placement_cell.announcement.publish",
+          "placement_cell.application.review",
+          "placement_cell.application.view",
+          "placement_cell.company.manage",
+          "placement_cell.interview.schedule",
+          "placement_cell.job_posting.manage",
+          "placement_cell.job_posting.view",
+          "placement_cell.offer.issue",
+          "placement_cell.offer.revoke",
+          "placement_cell.record.manage",
+          "placement_cell.registration.debar",
+          "placement_cell.registration.manage",
+          "placement_cell.report.view"
+        ],
+        "student": [
+          "placement_cell.application.create",
+          "placement_cell.application.delete",
+          "placement_cell.application.view_self",
+          "placement_cell.job_posting.view",
+          "placement_cell.offer.respond",
+          "placement_cell.registration.self"
+        ]
+      },
+      "module_grants": [
+        "Dean Academic",
+        "placement_chairman",
+        "placement_coordinator",
+        "placement_officer",
+        "student"
+      ],
+      "nav": {
+        "base_path": "/placement",
+        "icon": "Briefcase",
+        "items": [
+          {
+            "code": "placement.registration",
+            "icon": "Checks",
+            "label": "Season Registration",
+            "required_permission": "placement_cell.registration.self",
+            "sort_order": 5,
+            "to": "/placement/registration"
+          },
+          {
+            "code": "placement.postings",
+            "icon": "ClipboardText",
+            "label": "Opportunities",
+            "required_permission": "placement_cell.job_posting.view",
+            "sort_order": 10,
+            "to": "/placement/postings"
+          },
+          {
+            "code": "placement.mine",
+            "icon": "UserCheck",
+            "label": "My Applications",
+            "required_permission": "placement_cell.application.view_self",
+            "sort_order": 20,
+            "to": "/placement/mine"
+          },
+          {
+            "code": "placement.offers",
+            "icon": "Signature",
+            "label": "My Offers",
+            "required_permission": "placement_cell.offer.respond",
+            "sort_order": 30,
+            "to": "/placement/offers"
+          },
+          {
+            "code": "placement.applications",
+            "icon": "Users",
+            "label": "Applications",
+            "required_permission": "placement_cell.application.view",
+            "sort_order": 50,
+            "to": "/placement/applications"
+          },
+          {
+            "code": "placement.registrations",
+            "icon": "Checks",
+            "label": "Registrations",
+            "required_permission": "placement_cell.registration.manage",
+            "sort_order": 55,
+            "to": "/placement/registration-approvals"
+          },
+          {
+            "code": "placement.companies",
+            "icon": "Buildings",
+            "label": "Companies",
+            "required_permission": "placement_cell.company.manage",
+            "sort_order": 60,
+            "to": "/placement/companies"
+          },
+          {
+            "code": "placement.interviews",
+            "icon": "CalendarBlank",
+            "label": "Interviews",
+            "required_permission": "placement_cell.interview.schedule",
+            "sort_order": 70,
+            "to": "/placement/interviews"
+          },
+          {
+            "code": "placement.announcements",
+            "icon": "Megaphone",
+            "label": "Announcements",
+            "required_permission": "placement_cell.announcement.publish",
+            "sort_order": 80,
+            "to": "/placement/announcements"
+          },
+          {
+            "code": "placement.cpi",
+            "icon": "GraduationCap",
+            "label": "Student CPI",
+            "required_permission": "placement_cell.academic_directory.view",
+            "sort_order": 85,
+            "to": "/placement/students-cpi"
+          },
+          {
+            "code": "placement.reports",
+            "icon": "ChartBar",
+            "label": "Reports",
+            "required_permission": "placement_cell.report.view",
+            "sort_order": 90,
+            "to": "/placement/reports"
+          }
+        ],
+        "label": "Placement Cell",
+        "nav_section": "Placement",
+        "sort_order": 10,
+        "status": "active"
+      },
+      "permissions": [
+        {
+          "code": "placement_cell.job_posting.view",
+          "label": "See job postings"
+        },
+        {
+          "code": "placement_cell.job_posting.manage",
+          "label": "Create and publish postings"
+        },
+        {
+          "code": "placement_cell.application.view",
+          "label": "See all applications"
+        },
+        {
+          "code": "placement_cell.application.view_self",
+          "label": "See one's own applications"
+        },
+        {
+          "code": "placement_cell.application.create",
+          "label": "Apply to a posting"
+        },
+        {
+          "code": "placement_cell.application.review",
+          "label": "Shortlist and reject applications"
+        },
+        {
+          "code": "placement_cell.application.delete",
+          "label": "Withdraw an application"
+        },
+        {
+          "code": "placement_cell.application.auto_withdraw",
+          "label": "System auto-withdrawal"
+        },
+        {
+          "code": "placement_cell.interview.schedule",
+          "label": "Schedule interview rounds"
+        },
+        {
+          "code": "placement_cell.offer.issue",
+          "label": "Extend an offer"
+        },
+        {
+          "code": "placement_cell.offer.respond",
+          "label": "Accept or decline an offer"
+        },
+        {
+          "code": "placement_cell.offer.revoke",
+          "label": "Revoke an issued offer"
+        },
+        {
+          "code": "placement_cell.offer.expire",
+          "label": "System offer expiry"
+        },
+        {
+          "code": "placement_cell.company.manage",
+          "label": "Register and approve companies"
+        },
+        {
+          "code": "placement_cell.announcement.publish",
+          "label": "Publish announcements"
+        },
+        {
+          "code": "placement_cell.report.view",
+          "label": "See operational reports"
+        },
+        {
+          "code": "placement_cell.registration.debar",
+          "label": "Record conduct incidents and impose placement sanctions"
+        },
+        {
+          "code": "placement_cell.registration.manage",
+          "label": "Approve late registrations and re-registrations"
+        },
+        {
+          "code": "placement_cell.registration.self",
+          "label": "Register yourself for a placement season"
+        },
+        {
+          "code": "placement_cell.record.manage",
+          "label": "Record off-campus placements and chase offer letters"
+        },
+        {
+          "code": "placement_cell.academic_directory.view",
+          "label": "Browse every student's declared CPI"
+        }
+      ],
+      "scope_permissions": [],
+      "system_permissions": [
+        "placement_cell.application.auto_withdraw",
+        "placement_cell.offer.expire"
+      ]
+    }
+  },
+  "publisher": "integrated",
+  "version": 2
+}

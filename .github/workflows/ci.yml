@@ -1,0 +1,111 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: fusion_integrated
+          POSTGRES_USER: fusion_admin
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-retries 10
+        ports: ["5432:5432"]
+    env:
+      DJANGO_SETTINGS_MODULE: config.settings.test
+      DB_PASSWORD: postgres
+      DB_HOST: 127.0.0.1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv venv --python 3.12 .venv
+      - run: uv pip install --python .venv/bin/python -e ".[dev]"
+
+      - name: Lint
+        run: .venv/bin/ruff check .
+
+      - name: Module boundaries (import-linter)
+        run: .venv/bin/lint-imports
+
+      - name: No cross-module foreign keys
+        run: .venv/bin/python ops/checks/no_cross_module_fk.py
+
+      - name: Contract getters are plural
+        run: .venv/bin/python ops/checks/contracts_are_plural.py
+
+      - name: Sidebar and client routes agree
+        run: .venv/bin/python ops/checks/nav_matches_routes.py
+
+      - name: Models and migrations agree
+        run: .venv/bin/python manage.py makemigrations --check --dry-run
+
+      - name: Django checks
+        run: .venv/bin/python manage.py check
+
+      # Prod settings, so this sees the security warnings test settings hide.
+      # The values are throwaway; only their presence matters.
+      - name: Every permission has a holder, and the manifest is current
+        run: .venv/bin/python manage.py permission_manifest --check
+
+      - name: Deployment checks
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.prod
+          DJANGO_SECRET_KEY: ci-only-key-long-enough-to-satisfy-the-length-check
+          DJANGO_ALLOWED_HOSTS: ci.invalid
+          IAM_SERVICE_TOKEN: ci
+          PLACEMENT_UPLOAD_ROOT: /tmp/ci-uploads
+          REDIS_CACHE_URL: redis://127.0.0.1:6379/1
+          REDIS_BROKER_URL: redis://127.0.0.1:6380/0
+        run: .venv/bin/python manage.py check --deploy --fail-level WARNING
+
+      - name: Committed OpenAPI schema matches the code
+        run: |
+          .venv/bin/python manage.py spectacular --fail-on-warn \
+            --file /tmp/openapi.check.yaml
+          diff -u openapi/fusion-integrated.v1.yaml /tmp/openapi.check.yaml \
+            || { echo "::error::openapi schema is stale — run 'make schema'"; exit 1; }
+
+      - name: Tests
+        run: .venv/bin/pytest -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - run: npm ci
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Tests
+        run: npm test
+      - name: Build
+        run: npm run build
+
+  # Advisory: a new CVE is not this commit's fault, so it reports without
+  # failing the build. Read it on every PR.
+  audit:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - name: Python dependencies
+        run: uvx pip-audit --strict --desc -r <(uvx pip-compile --quiet -o - pyproject.toml)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - name: Client dependencies
+        working-directory: client
+        run: npm audit --audit-level=high
